@@ -46,6 +46,10 @@ public class MazeConstructor : MonoBehaviour
 
     private MazeMeshGenerator meshGenerator;
 
+    public float hallWidth{get; private set;}
+    public int goalRow{get; private set;}
+    public int goalCol{get; private set;}
+
     void Awake()
     {
         // default to walls surrounding a single empty cell
@@ -57,16 +61,23 @@ public class MazeConstructor : MonoBehaviour
         };
 
         meshGenerator = new MazeMeshGenerator();
+
+        hallWidth = meshGenerator.width;
     }
 
     public void GenerateNewMaze(int sizeRows, int sizeCols)
     {
+        DisposeOldMaze();
+
         if (sizeRows % 2 == 0 && sizeCols % 2 == 0) //checks if both are even
         {
             Debug.LogError("Odd numbers work better for dungeon size.");
         }
         data = FromDimensions(sizeRows, sizeCols);
         DisplayMaze();
+
+        goalRow = data.GetUpperBound(0) - 1;
+        goalCol = data.GetUpperBound(1) - 1;
     }
 
     void OnGUI()
@@ -91,19 +102,28 @@ public class MazeConstructor : MonoBehaviour
     }
 
     private void DisplayMaze()
-{
-    GameObject go = new GameObject();
-    go.transform.position = Vector3.zero;
-    go.name = "Procedural Maze";
-    go.tag = "Generated";
+    {
+        GameObject go = new GameObject();
+        go.transform.position = Vector3.zero;
+        go.name = "Procedural Maze";
+        go.tag = "Generated";
 
-    MeshFilter mf = go.AddComponent<MeshFilter>();
-    mf.mesh = meshGenerator.FromData(data);
-    
-    MeshCollider mc = go.AddComponent<MeshCollider>();
-    mc.sharedMesh = mf.mesh;
+        MeshFilter mf = go.AddComponent<MeshFilter>();
+        mf.mesh = meshGenerator.FromData(data);
+        
+        MeshCollider mc = go.AddComponent<MeshCollider>();
+        mc.sharedMesh = mf.mesh;
 
-    MeshRenderer mr = go.AddComponent<MeshRenderer>();
-    mr.materials = new Material[2] {mazeMat1, mazeMat2};
-}
+        MeshRenderer mr = go.AddComponent<MeshRenderer>();
+        mr.materials = new Material[2] {mazeMat1, mazeMat2};
+    }
+
+    public void DisposeOldMaze()
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("Generated");
+        foreach (GameObject go in objects)
+        {
+            Destroy(go);
+        }
+    }
 }
