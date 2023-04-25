@@ -7,6 +7,8 @@ public class GameController : MonoBehaviour
 {
     private MazeConstructor constructor;
 
+    public GameObject playerPrefab;
+
     [SerializeField] private int rows;
     [SerializeField] private int cols;
 
@@ -18,5 +20,14 @@ public class GameController : MonoBehaviour
     void Start()
     {
         constructor.GenerateNewMaze(rows, cols);
+
+        CreatePlayer();
+    }
+
+    private void CreatePlayer() //playing player in square [1,1]
+    {
+        Vector3 playerStatPosition = new Vector3(constructor.hallWidth, 1, constructor.hallWidth);
+        GameObject player = Instantiate(playerPrefab, playerStatPosition, Quaternion.identity);
+        player.tag = "Generated";
     }
 }
