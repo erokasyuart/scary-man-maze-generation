@@ -248,13 +248,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 529368642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b490c939827ee2498ac146d559be015, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b76e828f6d4f884f85587094362409f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 11
-  cols: 11
-  playerPrefab: {fileID: 526753307576256837, guid: 38489d5a45d4eb941aa4fc7cc0a024ad, type: 3}
-  monsterPrefab: {fileID: 895211356916686346, guid: 09b229e705e4bea428f960c84c5058e0, type: 3}
+  rows: 15
+  cols: 15
 --- !u!114 &529368644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +262,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 529368642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7d9554ccdb473c48bb36b57199ec7c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 449d9a95e2f1f864abcab8daee54c3b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showDebug: 1
