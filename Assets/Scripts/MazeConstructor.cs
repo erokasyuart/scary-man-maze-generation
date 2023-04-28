@@ -45,6 +45,8 @@ public class MazeConstructor : MonoBehaviour
     public float placementThreshold = 0.1f; //chance of empty space
 
     private MazeMeshGenerator meshGenerator;
+    
+    public Node[,] graph;
 
     public float hallWidth{get; private set;}
     public int goalRow{get; private set;}
@@ -74,6 +76,16 @@ public class MazeConstructor : MonoBehaviour
             Debug.LogError("Odd numbers work better for dungeon size.");
         }
         data = FromDimensions(sizeRows, sizeCols);
+
+        graph = new Node[sizeRows, sizeCols];
+        for (int i = 0; i < sizeRows; i++) //going through maze data
+        {
+            for (int j = 0; j < sizeCols; j++)
+            {
+                graph[i, j] = data[i,j] == 0 ? new Node(i, j, true) : new Node(i, j, false); //for every 0 isWalkabale = true
+            }
+        }
+
         DisplayMaze();
 
         goalRow = data.GetUpperBound(0) - 1;
