@@ -67,7 +67,7 @@ public class MazeConstructor : MonoBehaviour
         hallWidth = meshGenerator.width;
     }
 
-    public void GenerateNewMaze(int sizeRows, int sizeCols)
+    public void GenerateNewMaze(int sizeRows, int sizeCols, TriggerEventHandler treasureCallback)
     {
         DisposeOldMaze();
 
@@ -90,6 +90,8 @@ public class MazeConstructor : MonoBehaviour
 
         goalRow = data.GetUpperBound(0) - 1;
         goalCol = data.GetUpperBound(1) - 1;
+
+        PlaceGoal(treasureCallback);
     }
 
     void OnGUI()
@@ -137,5 +139,19 @@ public class MazeConstructor : MonoBehaviour
         {
             Destroy(go);
         }
+    }
+
+    private void PlaceGoal(TriggerEventHandler treasureCallback)
+    {
+        GameObject treasure = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        treasure.transform.position = new Vector3(goalCol * hallWidth, .5f, goalRow * hallWidth);
+        treasure.name = "Treasure";
+        treasure.tag = "Generated";
+
+        treasure.GetComponent<BoxCollider>().isTrigger = true;
+        treasure.GetComponent<MeshRenderer>().sharedMaterial = treasureMat;
+
+        TriggerEventRouter tc = treasure.AddComponent<TriggerEventRouter>(); //a script that is called at collision
+        tc.callback = treasureCallback;
     }
 }
