@@ -10,16 +10,68 @@ public class AIController : MonoBehaviour
     private Node[,] graph;
     public Node[,] Graph {get {return graph;} set {graph = value;}}
 
-    // Start is called before the first frame update
-    void Start()
+    [Header("Pathfinding")]
+    private GameObject monster;
+    public GameObject Monster
     {
-        
+        get { return monster; }
+        set { monster = value; }
+    }
+
+    private GameObject player;
+    public GameObject Player 
+    {
+        get { return player; }
+        set { player = value; }
+    }
+
+    private float hallWidth;
+    public float HallWidth 
+    {
+        get { return hallWidth; }
+        set { hallWidth = value; }
+    }
+
+    [SerializeField] private float monsterSpeed;
+    private int startRow = -1;
+    private int startCol = -1;
+
+
+    // Called in another script
+    public void StartAI()
+    {
+        startRow = graph.GetUpperBound(0) - 1; //maze man's start position; -1 to take into account the walls
+        startCol = graph.GetUpperBound(1) - 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (startRow != -1 && startCol != -1) //checks if the man isnt in his start position
+        {
+            int playerCol = (int)Mathf.Round(player.transform.position.x / hallWidth); //maze cells are hallwidth wide so divide by hallwidth to get player
+            int playerRow = (int)Mathf.Round(player.transform.position.x / hallWidth); //rounds it to an int
+
+            List<Node> path = FindPath(startRow, startCol, playerRow, playerCol); //sends FindPath(); the start pos of man and the current pos of player
+
+            if (path != null && path.Count > 1) //if there is a returned path and not in the same cell as player (>1)
+            {
+                Node nextNode = path[1]; //go to the next position (path[0] is current cell monster is on)
+                float nextX = nextNode.y * hallWidth; //getting the size of the cell
+                float nextZ = nextNode.x * hallWidth;
+                Vector3 endPosition = new Vector3(nextX, 0f, nextZ); //sets a vector3 for the next desired position *
+                float step =  monsterSpeed * Time.deltaTime;
+                monster.transform.position = Vector3.MoveTowards(monster.transform.position, endPosition, step);
+                Vector3 targetDirection = endPosition - monster.transform.position;
+                Vector3 newDirection = Vector3.RotateTowards(monster.transform.forward, targetDirection, step, 0.0f);
+                monster.transform.rotation = Quaternion.LookRotation(newDirection);
+                if(monster.transform.position == endPosition) //if the monster reaches the desired position *
+                {
+                    startRow = nextNode.x; //resets his start pos to the next node because this is checking every frame
+                    startCol = nextNode.y;
+                }
+            }
+        }
     }
 
     private int CalculateDistanceCost(Node a, Node b)

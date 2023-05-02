@@ -13,30 +13,40 @@ public class GameController : MonoBehaviour
     [SerializeField] private int rows;
     [SerializeField] private int cols;
 
+    private AIController aIController;
+
     void Awake()
     {
         constructor = GetComponent<MazeConstructor>();
+        aIController = GetComponent<AIController>();
     }
     
     void Start()
     {
         constructor.GenerateNewMaze(rows, cols);
 
-        CreatePlayer();
-        CreateMonster();
+        aIController.Graph = constructor.graph;
+        aIController.Player = CreatePlayer(); //used in AIController
+        aIController.Monster = CreateMonster();
+        aIController.HallWidth = constructor.hallWidth;
+        aIController.StartAI();
     }
 
-    private void CreatePlayer() //playing player in square [1,1]
+    private GameObject CreatePlayer() //playing player in square [1,1]
     {
         Vector3 playerStatPosition = new Vector3(constructor.hallWidth, 1, constructor.hallWidth);
         GameObject player = Instantiate(playerPrefab, playerStatPosition, Quaternion.identity);
         player.tag = "Generated";
+
+        return player;
     }
 
-    private void CreateMonster()
+    private GameObject CreateMonster()
     {
         Vector3 monsterPosition = new Vector3(constructor.goalCol * constructor. hallWidth, 0f, constructor.goalRow * constructor.hallWidth);
         GameObject monster = Instantiate(monsterPrefab, monsterPosition, Quaternion.identity);
         monster.tag = "Generated";
+
+        return monster;
     }
 }
