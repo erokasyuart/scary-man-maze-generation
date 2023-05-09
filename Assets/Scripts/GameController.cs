@@ -36,7 +36,9 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKeyDown("f"))
         {
-            //List<Node> path = aIController.FindPath(constructor.treasure.transform.position.x, constructor.treasure.transform.position.z, aIController.playerCol, aIController.playerRow);
+            int playerCol = (int)Mathf.Round(player.transform.position.x / hallWidth); //maze cells are hallwidth wide so divide by hallwidth to get player
+            int playerRow = (int)Mathf.Round(player.transform.position.x / hallWidth); //rounds it to an int
+            aIController.FindPath(0, 0, playerCol, playerRow);
             for (int i = 0; i < 5; i++)
             {
                 GameObject guide = GameObject.CreatePrimitive(PrimitiveType.Sphere);

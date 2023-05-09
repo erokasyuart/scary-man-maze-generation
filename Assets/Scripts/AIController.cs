@@ -82,7 +82,7 @@ public class AIController : MonoBehaviour
         return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, yDistance) + MOVE_STRAIGHT_COST * remaining;
     }
 
-    private Node GetLowestFCostNode(List<Node> pathNodeList)
+    public Node GetLowestFCostNode(List<Node> pathNodeList)
     {
         Node lowestFCostNode = pathNodeList[0];
         for(int i = 1; i < pathNodeList.Count; i++)//go through the list
