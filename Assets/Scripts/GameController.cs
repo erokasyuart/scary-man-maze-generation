@@ -32,6 +32,19 @@ public class GameController : MonoBehaviour
         aIController.StartAI();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown("f"))
+        {
+            //List<Node> path = aIController.FindPath(constructor.treasure.transform.position.x, constructor.treasure.transform.position.z, aIController.playerCol, aIController.playerRow);
+            for (int i = 0; i < 5; i++)
+            {
+                GameObject guide = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                guide.transform.position = new Vector3(0, .5f, 0);
+            }
+        }
+    }
+
     private GameObject CreatePlayer() //playing player in square [1,1]
     {
         Vector3 playerStatPosition = new Vector3(constructor.hallWidth, 1, constructor.hallWidth);
@@ -43,8 +56,8 @@ public class GameController : MonoBehaviour
 
     private GameObject CreateMonster(TriggerEventHandler monsterCallback)
     {
-        Vector3 monsterPosition = new Vector3(constructor.goalCol * constructor. hallWidth, 0f, constructor.goalRow * constructor.hallWidth);
-        GameObject monster = Instantiate(monsterPrefab, monsterPosition, Quaternion.identity);
+        Vector3 monsterPosition = new Vector3(constructor.goalCol * constructor. hallWidth, 0f, constructor.goalRow * constructor.hallWidth); //sets the monster's spawn position
+        GameObject monster = Instantiate(monsterPrefab, monsterPosition, Quaternion.identity); //instantiates monster prefab
         monster.tag = "Generated";
         TriggerEventRouter trigger = monster.AddComponent<TriggerEventRouter>(); //just adds the TriggerEventRouter script
         trigger.callback = monsterCallback;
