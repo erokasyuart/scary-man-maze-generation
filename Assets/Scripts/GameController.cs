@@ -23,11 +23,11 @@ public class GameController : MonoBehaviour
     
     void Start()
     {
-        constructor.GenerateNewMaze(rows, cols, OnTreasureTrigger);
+        constructor.GenerateNewMaze(rows, cols, OnTreasureTrigger, OnMonsterTrigger);
 
         aIController.Graph = constructor.graph;
         aIController.Player = CreatePlayer(); //used in AIController
-        aIController.Monster = CreateMonster();
+        aIController.Monster = CreateMonster(OnMonsterTrigger);
         aIController.HallWidth = constructor.hallWidth;
         aIController.StartAI();
     }
@@ -41,11 +41,13 @@ public class GameController : MonoBehaviour
         return player;
     }
 
-    private GameObject CreateMonster()
+    private GameObject CreateMonster(TriggerEventHandler monsterCallback)
     {
         Vector3 monsterPosition = new Vector3(constructor.goalCol * constructor. hallWidth, 0f, constructor.goalRow * constructor.hallWidth);
         GameObject monster = Instantiate(monsterPrefab, monsterPosition, Quaternion.identity);
         monster.tag = "Generated";
+        TriggerEventRouter trigger = monster.AddComponent<TriggerEventRouter>(); //just adds the TriggerEventRouter script
+        trigger.callback = monsterCallback;
 
         return monster;
     }
@@ -54,5 +56,11 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("You Won!");
         aIController.StopAI();
+    }
+
+    //advanced assessment task
+    private void OnMonsterTrigger(GameObject trigger, GameObject other)
+    {
+        Debug.Log("You got got!");
     }
 }
