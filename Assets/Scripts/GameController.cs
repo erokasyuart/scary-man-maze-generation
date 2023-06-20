@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MazeConstructor))]           
@@ -34,7 +35,7 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown("f"))
+        /*if (Input.GetKeyDown("f"))
         {
             int playerCol = (int)Mathf.Round(player.transform.position.x / hallWidth); //maze cells are hallwidth wide so divide by hallwidth to get player
             int playerRow = (int)Mathf.Round(player.transform.position.x / hallWidth); //rounds it to an int
@@ -44,7 +45,7 @@ public class GameController : MonoBehaviour
                 GameObject guide = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 guide.transform.position = new Vector3(0, .5f, 0);
             }
-        }
+        }*/
     }
 
     private GameObject CreatePlayer() //playing player in square [1,1]
