@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 [RequireComponent(typeof(MazeConstructor))]           
@@ -82,5 +83,6 @@ public class GameController : MonoBehaviour
     private void OnMonsterTrigger(GameObject trigger, GameObject other)
     {
         Debug.Log("You got got!");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //reloads the current scene which also resets the maze!
     }
 }
