@@ -31,21 +31,25 @@ public class GameController : MonoBehaviour
         aIController.Monster = CreateMonster(OnMonsterTrigger);
         aIController.HallWidth = constructor.hallWidth;
         aIController.StartAI();
+
     }
 
     void Update()
     {
-        /*if (Input.GetKeyDown("f"))
+        if (Input.GetKeyDown("f"))
         {
-            int playerCol = (int)Mathf.Round(player.transform.position.x / hallWidth); //maze cells are hallwidth wide so divide by hallwidth to get player
-            int playerRow = (int)Mathf.Round(player.transform.position.x / hallWidth); //rounds it to an int
-            aIController.FindPath(0, 0, playerCol, playerRow);
-            for (int i = 0; i < 5; i++)
+            //finds player positon
+            int playerCol = (int)Mathf.Round(aIController.Player.transform.position.x / aIController.HallWidth); //maze cells are hallwidth wide so divide by hallwidth to get player
+            int playerRow = (int)Mathf.Round(aIController.Player.transform.position.z / aIController.HallWidth); //rounds it to an int
+            
+            //calls the FindPath() to do the finding
+            // ! Index out of bounds error !
+            List<Node> path = aIController.FindPath(playerRow, playerCol, constructor.goalRow, constructor.goalCol); //sends FindPath(); the start pos of man and the current pos of player
+            foreach(Node node in path)
             {
-                GameObject guide = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                guide.transform.position = new Vector3(0, .5f, 0);
+                constructor.PlaceGuide(node);
             }
-        }*/
+        }
     }
 
     private GameObject CreatePlayer() //playing player in square [1,1]

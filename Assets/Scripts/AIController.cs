@@ -50,7 +50,7 @@ public class AIController : MonoBehaviour
         if (startRow != -1 && startCol != -1) //checks if the man isnt in his start position
         {
             int playerCol = (int)Mathf.Round(player.transform.position.x / hallWidth); //maze cells are hallwidth wide so divide by hallwidth to get player
-            int playerRow = (int)Mathf.Round(player.transform.position.x / hallWidth); //rounds it to an int
+            int playerRow = (int)Mathf.Round(player.transform.position.z / hallWidth); //rounds it to an int
 
             List<Node> path = FindPath(startRow, startCol, playerRow, playerCol); //sends FindPath(); the start pos of man and the current pos of player
 

@@ -3,11 +3,14 @@
 public class MazeConstructor : MonoBehaviour
 {
     public bool showDebug;
+
+    public GameObject treasure;
     
     [SerializeField] private Material mazeMat1;
     [SerializeField] private Material mazeMat2;
     [SerializeField] private Material startMat;
     [SerializeField] private Material treasureMat;
+    [SerializeField] private Material guideMat;
 
     public int[,] data
     {
@@ -97,8 +100,9 @@ public class MazeConstructor : MonoBehaviour
     void OnGUI()
     {
         if (!showDebug)
+        {
             return;
-
+        }
         int[,] maze = data;
         int rMax = maze.GetUpperBound(0);
         int cMax = maze.GetUpperBound(1);
@@ -113,6 +117,7 @@ public class MazeConstructor : MonoBehaviour
         }
 
         GUI.Label(new Rect(20, 20, 500, 500), msg);
+    
     }
 
     private void DisplayMaze()
@@ -143,7 +148,7 @@ public class MazeConstructor : MonoBehaviour
 
     private void PlaceGoal(TriggerEventHandler treasureCallback)
     {
-        GameObject treasure = GameObject.CreatePrimitive(PrimitiveType.Cube); //make a cube
+        treasure = GameObject.CreatePrimitive(PrimitiveType.Cube); //make a cube
         treasure.transform.position = new Vector3(goalCol * hallWidth, .5f, goalRow * hallWidth); //position it at the end of the maze
         treasure.name = "Treasure";
         treasure.tag = "Generated";
@@ -153,5 +158,16 @@ public class MazeConstructor : MonoBehaviour
 
         TriggerEventRouter tc = treasure.AddComponent<TriggerEventRouter>(); //a script that is called at collision
         tc.callback = treasureCallback;
+    }
+
+    public void PlaceGuide(Node node)
+    {
+        GameObject guide = GameObject.CreatePrimitive(PrimitiveType.Sphere); //creates sphere
+        guide.transform.position = new Vector3(node.y * hallWidth, .5f, node.x * hallWidth); //changes the position
+        guide.name = "Guide"; //gives the sphere a name
+        guide.tag = "Generated";
+
+        guide.GetComponent<SphereCollider>().isTrigger = true; //disables the collision
+        guide.GetComponent<MeshRenderer>().sharedMaterial = guideMat;
     }
 }
