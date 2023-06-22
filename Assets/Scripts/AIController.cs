@@ -74,6 +74,7 @@ public class AIController : MonoBehaviour
         }
     }
 
+    //Calculates the distance of node from goal and node from start
     private int CalculateDistanceCost(Node a, Node b)
     {
         int xDistance = Mathf.Abs(a.x - b.x);
@@ -82,6 +83,7 @@ public class AIController : MonoBehaviour
         return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, yDistance) + MOVE_STRAIGHT_COST * remaining;
     }
 
+    //Calculates the lowest "cost" to be able to move
     public Node GetLowestFCostNode(List<Node> pathNodeList)
     {
         Node lowestFCostNode = pathNodeList[0];
@@ -95,6 +97,7 @@ public class AIController : MonoBehaviour
         return lowestFCostNode;
     }
 
+    //Finds the adjacent nodes
     private List<Node> GetNeighbourList(Node currentNode)
     {
         List<Node> neighbourList = new List<Node>();
@@ -127,6 +130,7 @@ public class AIController : MonoBehaviour
         return neighbourList;
     }
 
+    //Stores a list of nodes from end to start
     private List<Node> CalculatePath(Node endNode)
     {
         List<Node> path = new List<Node>();
@@ -141,6 +145,7 @@ public class AIController : MonoBehaviour
         return path;
     }
 
+    //Path finding
     public List<Node> FindPath(int startX, int startY, int endX, int endY)
     {
         Node startNode = graph[startX,startY];
@@ -149,48 +154,58 @@ public class AIController : MonoBehaviour
         List<Node> openList = new List<Node> { startNode };
         List<Node> closedList = new List<Node>();
 
-        int graphWidth = graph.GetLength(0);
+        int graphWidth = graph.GetLength(0); //the outerbounds
         int graphHeight = graph.GetLength(1);
 
         for(int x = 0; x < graphWidth; x++)
             for(int y = 0; y < graphHeight; y++)
             {
                 Node pathNode = graph[x, y];
-                pathNode.gCost = int.MaxValue;
+                pathNode.gCost = int.MaxValue; //starts at the highest possible value
                 pathNode.CalculateFCost();
                 pathNode.cameFromNode = null;
             }
 
-        startNode.gCost = 0;
-        startNode.hCost = CalculateDistanceCost(startNode, endNode);
+        startNode.gCost = 0; //closest to start
+        startNode.hCost = CalculateDistanceCost(startNode, endNode); //end node
         startNode.CalculateFCost();
 
-        while(openList.Count > 0)
+        while(openList.Count > 0) ///while there are still open nodes
         {
             Node currentNode = GetLowestFCostNode(openList);
-            if(currentNode == endNode)            
-                return CalculatePath(endNode);            
+            if(currentNode == endNode) //if it reaches the goal
+            {
+                return CalculatePath(endNode);
+            }
 
-            openList.Remove(currentNode);
-            closedList.Add(currentNode);
+            openList.Remove(currentNode); //remove current node from open list
+            closedList.Add(currentNode); //then add it to closed list
 
-            foreach(Node neighbourNode in GetNeighbourList(currentNode)){
-                if(closedList.Contains(neighbourNode)) continue;
+            foreach(Node neighbourNode in GetNeighbourList(currentNode)) //for every neighbouring node in the closed list
+            {
+                if(closedList.Contains(neighbourNode)) //if its already in the list
+                {
+                    continue; //no double checking, break current loop, continue
+                }
 
-                if(!neighbourNode.isWalkable){
-                    closedList.Add(neighbourNode);
-                    continue;
+                if(!neighbourNode.isWalkable) //if not walkable
+                {
+                    closedList.Add(neighbourNode); //add it to closed
+                    continue; //break if loop, continue
                 }
 
                 int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
-                if(tentativeGCost < neighbourNode.gCost){
+                if(tentativeGCost < neighbourNode.gCost) //if neighbour has lower gcost
+                {
                     neighbourNode.cameFromNode = currentNode;
                     neighbourNode.gCost = tentativeGCost;
                     neighbourNode.hCost = CalculateDistanceCost(neighbourNode, endNode);  
-                    neighbourNode.CalculateFCost();                  
+                    neighbourNode.CalculateFCost(); //recalculates fcost
 
                     if(!openList.Contains(neighbourNode))
-                        openList.Add(neighbourNode);
+                    {
+                        openList.Add(neighbourNode); //then adds it to the open list
+                    }
                 }
             }
         }
@@ -199,12 +214,11 @@ public class AIController : MonoBehaviour
         return null;
     }
 
+    //Removes the monster
     public void StopAI()
     {
         startRow = -1;
         startCol = -1;
         Destroy(monster);
     }
-    
-
 }

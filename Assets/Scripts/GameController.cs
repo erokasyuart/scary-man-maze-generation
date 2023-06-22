@@ -8,14 +8,13 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     private MazeConstructor constructor;
+    private AIController aIController;
 
     public GameObject playerPrefab;
     public GameObject monsterPrefab;
 
     [SerializeField] private int rows;
     [SerializeField] private int cols;
-
-    private AIController aIController;
 
     void Awake()
     {
@@ -42,7 +41,7 @@ public class GameController : MonoBehaviour
             //finds player positon
             int playerCol = (int)Mathf.Round(aIController.Player.transform.position.x / aIController.HallWidth); //maze cells are hallwidth wide so divide by hallwidth to get player
             int playerRow = (int)Mathf.Round(aIController.Player.transform.position.z / aIController.HallWidth); //rounds it to an int
-            
+            constructor.RemoveGuide();
             //calls the FindPath() to do the finding
             // ! Index out of bounds error !
             List<Node> path = aIController.FindPath(playerRow, playerCol, constructor.goalRow, constructor.goalCol); //sends FindPath(); the start pos of man and the current pos of player
@@ -51,8 +50,10 @@ public class GameController : MonoBehaviour
                 constructor.PlaceGuide(node);
             }
         }
+
     }
 
+    //Spawns player
     private GameObject CreatePlayer() //playing player in square [1,1]
     {
         Vector3 playerStatPosition = new Vector3(constructor.hallWidth, 1, constructor.hallWidth);
@@ -62,6 +63,7 @@ public class GameController : MonoBehaviour
         return player;
     }
 
+    //Spawns monster
     private GameObject CreateMonster(TriggerEventHandler monsterCallback)
     {
         Vector3 monsterPosition = new Vector3(constructor.goalCol * constructor. hallWidth, 0f, constructor.goalRow * constructor.hallWidth); //sets the monster's spawn position
@@ -73,6 +75,7 @@ public class GameController : MonoBehaviour
         return monster;
     }
 
+    //When the player enters the treasure's trigger
     private void OnTreasureTrigger(GameObject trigger, GameObject other)
     {
         Debug.Log("You Won!");
@@ -80,9 +83,10 @@ public class GameController : MonoBehaviour
     }
 
     //advanced assessment task
+    //When the player enters the monster's trigger
     private void OnMonsterTrigger(GameObject trigger, GameObject other)
     {
         Debug.Log("You got got!");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //reloads the current scene which also resets the maze!
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reloads the current scene which also resets the maze!
     }
 }

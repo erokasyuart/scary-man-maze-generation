@@ -66,10 +66,10 @@ public class MazeConstructor : MonoBehaviour
         };
 
         meshGenerator = new MazeMeshGenerator();
-
         hallWidth = meshGenerator.width;
     }
 
+    //Creates a randomly generated maze
     public void GenerateNewMaze(int sizeRows, int sizeCols, TriggerEventHandler treasureCallback, TriggerEventHandler monsterCallback)
     {
         DisposeOldMaze();
@@ -97,6 +97,7 @@ public class MazeConstructor : MonoBehaviour
         PlaceGoal(treasureCallback);
     }
 
+    //Shows the layout as UI
     void OnGUI()
     {
         if (!showDebug)
@@ -120,6 +121,7 @@ public class MazeConstructor : MonoBehaviour
     
     }
 
+    //Makes the physical maze
     private void DisplayMaze()
     {
         GameObject go = new GameObject();
@@ -146,6 +148,7 @@ public class MazeConstructor : MonoBehaviour
         }
     }
 
+    //Places treasure at a node
     private void PlaceGoal(TriggerEventHandler treasureCallback)
     {
         treasure = GameObject.CreatePrimitive(PrimitiveType.Cube); //make a cube
@@ -160,6 +163,8 @@ public class MazeConstructor : MonoBehaviour
         tc.callback = treasureCallback;
     }
 
+    //advanced assessment task
+    //Spawns spheres that show the path to the treasure
     public void PlaceGuide(Node node)
     {
         GameObject guide = GameObject.CreatePrimitive(PrimitiveType.Sphere); //creates sphere
@@ -169,5 +174,18 @@ public class MazeConstructor : MonoBehaviour
 
         guide.GetComponent<SphereCollider>().isTrigger = true; //disables the collision
         guide.GetComponent<MeshRenderer>().sharedMaterial = guideMat;
+    }
+
+    //Removes the guide spheres
+    public void RemoveGuide()
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("Generated");
+        for (int i = 0; i < objects.Length; i++)
+        {
+            if (objects[i].name == "Guide")
+            {
+                Destroy(objects[i]);
+            }
+        }
     }
 }
